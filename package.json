@@ -1,9 +1,24 @@
 {
   "name": "dsh-deep-loop",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
-  "description": "Deep mode for DeepSeek Harness: /deep makes the main agent analyse and implement in the open, spawn subagents only when needed for solution research and independent review, and blocks delivery without a survey ledger or while severe findings remain.",
+  "description": "Deep-work mode for DeepSeek Harness: /deep makes the agent research existing solutions before building, implement in the open, and pass an independent review — it blocks delivery on reinvented wheels and unverified work.",
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "ai-agent",
+    "code-review",
+    "self-reflection",
+    "reinvent-the-wheel",
+    "build-vs-buy",
+    "open-source-first",
+    "research-first",
+    "agent-workflow",
+    "prompt-engineering"
+  ],
   "main": "./index.js",
   "exports": {
     ".": "./index.js",
@@ -11,6 +26,19 @@
     "./icon": "./icon.svg"
   },
   "icon": "./icon.svg",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Astonmy/dsh-deep-loop.git"
+  },
+  "homepage": "https://github.com/Astonmy/dsh-deep-loop#readme",
+  "bugs": {
+    "url": "https://github.com/Astonmy/dsh-deep-loop/issues"
+  },
+  "engines": {
+    "node": ">=22.19.0",
+    "dsh": ">=0.2.2-rc.3 <0.3.0-0"
+  },
   "files": [
     "index.js",
     "lib",
