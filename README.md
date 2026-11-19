@@ -1,6 +1,6 @@
 # dsh-look-then-build — 先看，再建
 
-给 [DeepSeek Harness](https://github.com/lookseek-ai/lookseek-harness) 加一道流程：**输入 `/look` 进入「先看后建」模式**，AI 不许上来就写，得先把问题分析清楚；要造轮子之前先查现成方案；写完之后由一个独立上下文的 Agent 挑刺，过不了不许交付。
+给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 加一道流程：**输入 `/look` 进入「先看后建」模式**，AI 不许上来就写，得先把问题分析清楚；要造轮子之前先查现成方案；写完之后由一个独立上下文的 Agent 挑刺，过不了不许交付。
 
 一句话：**治 AI 乱写代码、重复造轮子、不做调研、不看开源项目的毛病。** 名字就是规矩：先看，再建。
 
@@ -102,7 +102,7 @@ git clone https://github.com/Astonmy/dsh-look-then-build
 
 ## What it solves (English)
 
-Look before you build. A deep-work mode for DeepSeek Harness: type `/look` and the agent must analyse first, survey existing solutions before building anything itself, implement in the open, then have a fresh-context agent attack the result. Delivery is blocked without a survey ledger, without an independent review, or while severe findings remain.
+Look before you build. A look-before-build mode for DeepSeek Harness: type `/look` and the agent must analyse first, survey existing solutions before building anything itself, implement in the open, then have a fresh-context agent attack the result. Delivery is blocked without a survey ledger, without an independent review, or while severe findings remain.
 
 It targets four common LLM coding failures: writing before researching, **reinventing the wheel instead of using existing open-source libraries**, never looking at prior art, and self-certifying its own work.
 

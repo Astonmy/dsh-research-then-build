@@ -3,7 +3,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
-import { DeepStateStore } from '../lib/store.js'
+import { LookStateStore } from '../lib/store.js'
 
 function fakeJournal(dir) {
   return {
@@ -25,7 +25,7 @@ test('warm 把磁盘上仍 active 的模式读回内存（重载后守卫不失�
     )
     await writeFile(join(dir, 'session-done.json'), JSON.stringify({ version: 2, state: 'closed', task: 't' }), 'utf8')
     await writeFile(join(dir, 'old.json'), JSON.stringify({ version: 1, state: 'finished' }), 'utf8')
-    const store = new DeepStateStore(fakeJournal(dir))
+    const store = new LookStateStore(fakeJournal(dir))
     await store.warm()
     assert.equal(store.peek('session-abc')?.state, 'active')
     assert.equal(store.peek('session-done'), null)
@@ -39,7 +39,7 @@ test('warm 遇到坏文件不抛错', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'look-then-build-store-'))
   try {
     await writeFile(join(dir, 'broken.json'), '{not json', 'utf8')
-    const store = new DeepStateStore(fakeJournal(dir))
+    const store = new LookStateStore(fakeJournal(dir))
     await store.warm()
     assert.equal(store.peek('broken'), null)
   } finally {

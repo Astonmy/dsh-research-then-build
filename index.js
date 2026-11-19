@@ -5,8 +5,8 @@ import { Journal } from './lib/journal.js'
 import { lookBrief } from './lib/prompts.js'
 import { renderStatus } from './lib/report.js'
 import { createState, isActive } from './lib/state.js'
-import { DeepStateStore } from './lib/store.js'
-import { createDeepTools } from './lib/tools.js'
+import { LookStateStore } from './lib/store.js'
+import { createLookTools } from './lib/tools.js'
 
 export const name = 'look-then-build'
 export const inject = ['commands', 'subagents', 'tools', 'sessions']
@@ -27,14 +27,14 @@ export function apply(ctx, config = {}) {
   const maxRounds = normalizeMaxRounds(config.maxRounds)
   const probe = config.probe === 'every' ? 'every' : 'last'
   const journal = new Journal(config.reportDirectory)
-  const store = new DeepStateStore(journal)
+  const store = new LookStateStore(journal)
 
   /** agentId -> 该会话专用工具的注销函数。 */
   const scoped = new Map()
   let globalDisposers = null
 
   const makeDefs = () =>
-    createDeepTools({
+    createLookTools({
       ctx,
       store,
       spawn: spawnChild,
