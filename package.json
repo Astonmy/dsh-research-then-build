@@ -2,7 +2,7 @@
   "name": "dsh-look-then-build",
   "version": "0.4.0",
   "type": "module",
-  "description": "Look before you build: /deep makes the agent survey existing solutions before writing code, implement in the open, and pass an independent review — delivery is blocked on reinvented wheels and unverified work.",
+  "description": "Look before you build: /look makes the agent survey existing solutions before writing code, implement in the open, and pass an independent review — delivery is blocked on reinvented wheels and unverified work.",
   "keywords": [
     "deepseek",
     "deepseek-harness",
