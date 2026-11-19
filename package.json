@@ -1,20 +1,22 @@
 {
-  "name": "dsh-deep-loop",
-  "version": "0.3.0",
+  "name": "dsh-look-then-build",
+  "version": "0.4.0",
   "type": "module",
-  "description": "Deep-work mode for DeepSeek Harness: /deep makes the agent research existing solutions before building, implement in the open, and pass an independent review — it blocks delivery on reinvented wheels and unverified work.",
+  "description": "Look before you build: /deep makes the agent survey existing solutions before writing code, implement in the open, and pass an independent review — delivery is blocked on reinvented wheels and unverified work.",
   "keywords": [
     "deepseek",
     "deepseek-harness",
     "dsh",
     "dsh-plugin",
     "ai-agent",
+    "ai-coding",
     "code-review",
     "self-reflection",
     "reinvent-the-wheel",
     "build-vs-buy",
     "open-source-first",
     "research-first",
+    "look-before-you-leap",
     "agent-workflow",
     "prompt-engineering"
   ],
@@ -28,11 +30,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Astonmy/dsh-deep-loop.git"
+    "url": "git+https://github.com/Astonmy/dsh-look-then-build.git"
   },
-  "homepage": "https://github.com/Astonmy/dsh-deep-loop#readme",
+  "homepage": "https://github.com/Astonmy/dsh-look-then-build#readme",
   "bugs": {
-    "url": "https://github.com/Astonmy/dsh-deep-loop/issues"
+    "url": "https://github.com/Astonmy/dsh-look-then-build/issues"
   },
   "engines": {
     "node": ">=22.19.0",

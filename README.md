@@ -1,8 +1,8 @@
-# dsh-deep-loop — 让 AI 先看别人怎么做的，再动手
+# dsh-look-then-build — 先看，再建
 
-给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 加一道流程：**输入 `/deep` 进入深度模式**，AI 不许上来就写，得先把问题分析清楚；要造轮子之前先查现成方案；写完之后由一个独立上下文的 Agent 挑刺，过不了不许交付。
+给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 加一道流程：**输入 `/deep` 进入「先看后建」模式**，AI 不许上来就写，得先把问题分析清楚；要造轮子之前先查现成方案；写完之后由一个独立上下文的 Agent 挑刺，过不了不许交付。
 
-一句话：**治 AI 乱写代码、重复造轮子、不做调研、不看开源项目的毛病。**
+一句话：**治 AI 乱写代码、重复造轮子、不做调研、不看开源项目的毛病。** 名字就是规矩：先看，再建。
 
 ## 它治的四个病
 
@@ -10,7 +10,7 @@
 
 **AI 的典型表现**：你说"给这个项目加个登录"，它直接手写 session 表、base64 拼 token、自己写校验，全程没提过 Auth.js、Lucia、Clerk 这些现成方案——不是不会用，是压根没去查。
 
-**这个插件怎么拦**：进入深度模式后，第一步是把问题拆开、把判断和不确定的地方写给用户看，然后才动手。一旦它打算引入依赖、或者打算自己写一个本该存在的轮子，就必须先调 `deep_research` 产出**采购台账**：候选方案、官方地址、许可证、维护状态、适配判断。
+**这个插件怎么拦**：进入模式后，第一步是把问题拆开、把判断和不确定的地方写给用户看，然后才动手。一旦它打算引入依赖、或者打算自己写一个本该存在的轮子，就必须先调 `deep_research` 产出**调研台账**：候选方案、官方地址、许可证、维护状态、适配判断。
 
 ### 2. 重复造轮子（自研）
 
@@ -41,7 +41,7 @@
    ↓
 主 Agent 先分析：拆能力点、说判断、说哪里不确定（流式可见）
    ↓
-需要外部事实 → deep_research   → 采购台账（候选/许可/维护/结论/证据）
+需要外部事实 → deep_research   → 调研台账（候选/许可/维护/结论/证据）
    ↓
 主 Agent 自己实现（不甩给子 Agent）
    ↓
@@ -63,18 +63,18 @@ deep_critique → 独立 Agent 挑刺 + 遗漏追问 + 把握盘点
 ### 从 npm 装（推荐）
 
 ```bash
-dsh plugin --profile <你的 profile> add dsh-deep-loop@latest --registry=https://registry.npmjs.org/
+dsh plugin --profile <你的 profile> add dsh-look-then-build@latest --registry=https://registry.npmjs.org/
 ```
 
-或者在 DSH 的 **Plugins** 面板里按包名添加 `dsh-deep-loop`。
+或者在 DSH 的 **Plugins** 面板里按包名添加 `dsh-look-then-build`。
 
 ### 从源码装
 
 ```bash
-git clone https://github.com/Astonmy/dsh-deep-loop
+git clone https://github.com/Astonmy/dsh-look-then-build
 ```
 
-然后在 **Plugins → Add plugin** 里选克隆下来的 `dsh-deep-loop` 目录；或用 `plugin_manager` 的 `install_bundle` 指向该目录。
+然后在 **Plugins → Add plugin** 里选克隆下来的目录；或用 `plugin_manager` 的 `install_bundle` 指向该目录。
 
 装完在新会话里输入 `/deep 你的任务` 验证。
 
@@ -82,7 +82,7 @@ git clone https://github.com/Astonmy/dsh-deep-loop
 
 | 输入 | 作用 |
 |---|---|
-| `/deep <任务>` | 进入深度模式 |
+| `/deep <任务>` | 进入「先看后建」模式 |
 | `/deep-status` | 看当前到哪一步、台账有没有、检查了几轮 |
 | `/deep-exit` | 退出，不交付 |
 
@@ -98,11 +98,11 @@ git clone https://github.com/Astonmy/dsh-deep-loop
 - 会话级工具注册有自动回退：环境不支持时退到全局注册，行为不变，只是不再省 token。
 - 检查者不是严格只读（只禁了 `write`/`edit`，shell 仍可能改文件），与宿主权限模型一致。
 - 实现落在当前工作目录，没有 worktree 隔离。
-- **两个关键机制尚未在真实回合里验证**：`turn-stopping` 收尾守卫是否真的触发、会话级工具注册是否真的让工具只在深度模式可见。
+- **两个关键机制尚未在真实回合里验证**：`turn-stopping` 收尾守卫是否真的触发、会话级工具注册是否真的让工具只在模式内可见。
 
 ## What it solves (English)
 
-A deep-work mode for DeepSeek Harness. Type `/deep` and the agent must analyse first, research existing solutions before building anything itself, implement in the open, then have a fresh-context agent attack the result. Delivery is blocked without a survey ledger, without an independent review, or while severe findings remain.
+Look before you build. A deep-work mode for DeepSeek Harness: type `/deep` and the agent must analyse first, survey existing solutions before building anything itself, implement in the open, then have a fresh-context agent attack the result. Delivery is blocked without a survey ledger, without an independent review, or while severe findings remain.
 
 It targets four common LLM coding failures: writing before researching, **reinventing the wheel instead of using existing open-source libraries**, never looking at prior art, and self-certifying its own work.
 

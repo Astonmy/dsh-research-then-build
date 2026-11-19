@@ -1,6 +1,6 @@
 - insert:
-    - id: deep-loop
-      name: 'dsh-deep-loop'
+    - id: look-then-build
+      name: 'dsh-look-then-build'
       config:
         maxRounds: 3
         # probe: every 会让「遗漏追问 + 把握盘点」每轮都跑（更贵，但对每轮都想看结论的人有用）

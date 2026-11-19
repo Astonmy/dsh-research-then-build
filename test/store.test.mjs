@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict'
+﻿import assert from 'node:assert/strict'
 import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -16,7 +16,7 @@ function fakeJournal(dir) {
 }
 
 test('warm 把磁盘上仍 active 的模式读回内存（重载后守卫不失效）', async () => {
-  const dir = await mkdtemp(join(tmpdir(), 'deep-loop-store-'))
+  const dir = await mkdtemp(join(tmpdir(), 'look-then-build-store-'))
   try {
     await writeFile(
       join(dir, 'session-abc.json'),
@@ -36,7 +36,7 @@ test('warm 把磁盘上仍 active 的模式读回内存（重载后守卫不失�
 })
 
 test('warm 遇到坏文件不抛错', async () => {
-  const dir = await mkdtemp(join(tmpdir(), 'deep-loop-store-'))
+  const dir = await mkdtemp(join(tmpdir(), 'look-then-build-store-'))
   try {
     await writeFile(join(dir, 'broken.json'), '{not json', 'utf8')
     const store = new DeepStateStore(fakeJournal(dir))

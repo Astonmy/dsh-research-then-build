@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto'
+﻿import { randomUUID } from 'node:crypto'
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
 import { preflight, spawnChild } from './lib/agents.js'
 import { Journal } from './lib/journal.js'
@@ -8,10 +8,10 @@ import { createState, isActive } from './lib/state.js'
 import { DeepStateStore } from './lib/store.js'
 import { createDeepTools } from './lib/tools.js'
 
-export const name = 'deep-loop'
+export const name = 'look-then-build'
 export const inject = ['commands', 'subagents', 'tools', 'sessions']
 
-const SOURCE = { kind: 'deep-loop' }
+const SOURCE = { kind: 'look-then-build' }
 const DEFAULT_MAX_ROUNDS = 3
 const MAX_ROUNDS_CEILING = 6
 /** 一轮结束时最多提醒几次，防止和"模型不配合"死循环。 */
@@ -82,7 +82,7 @@ export function apply(ctx, config = {}) {
         }
       }
       ctx.logger?.warn?.(
-        `deep-loop: 会话级工具注册不可用，回退全局注册（${error instanceof Error ? error.message : String(error)}）`,
+        `look-then-build: 会话级工具注册不可用，回退全局注册（${error instanceof Error ? error.message : String(error)}）`,
       )
       return null
     }
@@ -95,7 +95,7 @@ export function apply(ctx, config = {}) {
 
   ctx.effect(() => {
     void store.warm().catch((error) => {
-      ctx.logger?.warn?.(`deep-loop: warm failed: ${error instanceof Error ? error.message : String(error)}`)
+      ctx.logger?.warn?.(`look-then-build: warm failed: ${error instanceof Error ? error.message : String(error)}`)
     })
     return () => {
       for (const agentId of [...scoped.keys()]) closeScoped(agentId)
@@ -135,7 +135,7 @@ export function apply(ctx, config = {}) {
         }),
       )
     } catch (error) {
-      ctx.logger?.warn?.(`deep-loop: turn-stopping nudge failed: ${error instanceof Error ? error.message : String(error)}`)
+      ctx.logger?.warn?.(`look-then-build: turn-stopping nudge failed: ${error instanceof Error ? error.message : String(error)}`)
     }
   })
 
