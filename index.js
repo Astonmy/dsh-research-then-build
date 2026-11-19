@@ -1,4 +1,4 @@
-﻿import { randomUUID } from 'node:crypto'
+import { randomUUID } from 'node:crypto'
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
 import { preflight, spawnChild } from './lib/agents.js'
 import { Journal } from './lib/journal.js'
@@ -9,7 +9,7 @@ import { ResearchStateStore } from './lib/store.js'
 import { createResearchTools } from './lib/tools.js'
 
 export const name = 'research-then-build'
-export const inject = ['commands', 'subagents', 'tools', 'sessions']
+export const inject = ['commands', 'subagents', 'tools']
 
 const SOURCE = { kind: 'research-then-build' }
 const DEFAULT_MAX_ROUNDS = 3
@@ -147,7 +147,7 @@ export function apply(ctx, config = {}) {
       if (isActive(live)) return { kind: 'success', text: renderStatus(live) }
       const record = await journal.read(agent.id).catch(() => null)
       if (record && record.version === 2) return { kind: 'success', text: renderStatus(record) }
-      if (record) return { kind: 'success', text: `发现一份旧格式（v1）的循环记录：${record.task ?? ''}。它属于 \`/research\` 阻塞命令时代，不再更新。` }
+      if (record) return { kind: 'success', text: `发现一份旧格式（v1）的记录：${record.task ?? ''}。它来自更早的阻塞命令版本，不再更新。` }
       return { kind: 'success', text: '当前不在先调研后建模式。输入 /research <任务> 进入。' }
     },
   })

@@ -1,6 +1,6 @@
 {
   "name": "dsh-research-then-build",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "type": "module",
   "description": "Research before you build: /research makes the agent survey existing solutions before writing code, implement in the open, and pass an independent review — delivery is blocked on reinvented wheels and unverified work.",
   "keywords": [
