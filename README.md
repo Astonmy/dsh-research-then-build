@@ -60,13 +60,23 @@ deep_critique → 独立 Agent 挑刺 + 遗漏追问 + 把握盘点
 
 ## 安装
 
-仓库没有发布到 npm，装法是从源码装：
+### 从 npm 装（推荐）
+
+```bash
+dsh plugin --profile <你的 profile> add dsh-deep-loop@latest --registry=https://registry.npmjs.org/
+```
+
+或者在 DSH 的 **Plugins** 面板里按包名添加 `dsh-deep-loop`。
+
+### 从源码装
 
 ```bash
 git clone https://github.com/Astonmy/dsh-deep-loop
 ```
 
-然后在 DeepSeek Harness 里 **Plugins → Add plugin**，选克隆下来的 `dsh-deep-loop` 目录；或用 `plugin_manager` 的 `install_bundle` 指向该目录。装完在新会话里输入 `/deep 你的任务` 验证。
+然后在 **Plugins → Add plugin** 里选克隆下来的 `dsh-deep-loop` 目录；或用 `plugin_manager` 的 `install_bundle` 指向该目录。
+
+装完在新会话里输入 `/deep 你的任务` 验证。
 
 ## 用法
 

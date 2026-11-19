@@ -1,7 +1,6 @@
 {
   "name": "dsh-deep-loop",
   "version": "0.3.0",
-  "private": true,
   "type": "module",
   "description": "Deep-work mode for DeepSeek Harness: /deep makes the agent research existing solutions before building, implement in the open, and pass an independent review — it blocks delivery on reinvented wheels and unverified work.",
   "keywords": [
@@ -53,6 +52,13 @@
     "bundle": {
       "patch": "./cordis.patch.yml"
     }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --test test/state.test.mjs test/report.test.mjs test/fingerprint.test.mjs test/store.test.mjs",
+    "prepublishOnly": "npm test"
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": ">=4.0.1 <5.0.0",
