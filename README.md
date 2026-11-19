@@ -66,7 +66,7 @@ research_challenge → 独立 Agent 挑刺 + 遗漏追问 + 把握盘点
 dsh plugin --profile <你的 profile> add dsh-research-then-build@latest --registry=https://registry.npmjs.org/
 ```
 
-或者在 DSH 的 **Plugins** 面板里按包名添加 `dsh-research-then-build`。
+或者在 DSH 的 **Plugins** 面板里按包名添加 `dsh-research-then-build`。如果 npm 上还搜不到，用下面的源码方式装。
 
 ### 从源码装
 
