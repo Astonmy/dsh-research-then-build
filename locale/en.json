@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Deep mode",
+    "description": "Type /deep to enter deep mode: the main agent analyses, implements and streams; subagents are spawned only when needed, to survey existing solutions and then to attack the result independently. Delivery is blocked without a survey ledger or while severe findings remain.",
+    "detail": "docs/DETAIL.md"
+  }
+}

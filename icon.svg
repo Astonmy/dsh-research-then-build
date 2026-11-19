@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Deep loop">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#0f2a2a"/>
+  <g fill="none" stroke="#38d9a9" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 26a12 12 0 0 1 21-6"/>
+    <path d="M41 20v7h-7"/>
+    <path d="M44 38a12 12 0 0 1-21 6"/>
+    <path d="M23 44v-7h7"/>
+  </g>
+  <circle cx="32" cy="32" r="3.4" fill="#e6fffa"/>
+</svg>

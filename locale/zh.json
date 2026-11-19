@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "深度模式",
+    "description": "输入 /deep 进入深度模式：主 Agent 先分析问题、自己实现并流式输出，需要时派子 Agent 调研现成方案、再派独立 Agent 挑刺；没有台账或仍有严重问题时不放行交付。",
+    "detail": "docs/DETAIL.md"
+  }
+}
