@@ -23,7 +23,7 @@ test('有台账但没经过独立检查时不允许交付', () => {
   recordResearch(state, '## 能力点：登录\n- 结论：采用 Auth.js')
   const verdict = canFinish(state)
   assert.equal(verdict.ok, false)
-  assert.ok(verdict.reason.includes('look_challenge'))
+  assert.ok(verdict.reason.includes('research_challenge'))
 })
 
 test('台账与检查都有、最后收敛时放行', () => {

@@ -2,16 +2,16 @@
 import { createUserMessage } from '@deepseek-ai/dsh-llm'
 import { preflight, spawnChild } from './lib/agents.js'
 import { Journal } from './lib/journal.js'
-import { lookBrief } from './lib/prompts.js'
+import { modeBrief } from './lib/prompts.js'
 import { renderStatus } from './lib/report.js'
 import { createState, isActive } from './lib/state.js'
-import { LookStateStore } from './lib/store.js'
-import { createLookTools } from './lib/tools.js'
+import { ResearchStateStore } from './lib/store.js'
+import { createResearchTools } from './lib/tools.js'
 
-export const name = 'look-then-build'
+export const name = 'research-then-build'
 export const inject = ['commands', 'subagents', 'tools', 'sessions']
 
-const SOURCE = { kind: 'look-then-build' }
+const SOURCE = { kind: 'research-then-build' }
 const DEFAULT_MAX_ROUNDS = 3
 const MAX_ROUNDS_CEILING = 6
 /** 一轮结束时最多提醒几次，防止和"模型不配合"死循环。 */
@@ -27,14 +27,14 @@ export function apply(ctx, config = {}) {
   const maxRounds = normalizeMaxRounds(config.maxRounds)
   const probe = config.probe === 'every' ? 'every' : 'last'
   const journal = new Journal(config.reportDirectory)
-  const store = new LookStateStore(journal)
+  const store = new ResearchStateStore(journal)
 
   /** agentId -> 该会话专用工具的注销函数。 */
   const scoped = new Map()
   let globalDisposers = null
 
   const makeDefs = () =>
-    createLookTools({
+    createResearchTools({
       ctx,
       store,
       spawn: spawnChild,
@@ -56,7 +56,7 @@ export function apply(ctx, config = {}) {
   }
 
   /**
-   * 只在当前会话注册三个工具：不进先看后建模式的会话完全看不到它们，省掉每次请求的常驻描述。
+   * 只在当前会话注册三个工具：不进先调研后建模式的会话完全看不到它们，省掉每次请求的常驻描述。
    * 注册后立刻验证可见性；任何一环不成立就回退到全局注册（能力优先于省 token）。
    */
   function openScoped(agent) {
@@ -82,7 +82,7 @@ export function apply(ctx, config = {}) {
         }
       }
       ctx.logger?.warn?.(
-        `look-then-build: 会话级工具注册不可用，回退全局注册（${error instanceof Error ? error.message : String(error)}）`,
+        `research-then-build: 会话级工具注册不可用，回退全局注册（${error instanceof Error ? error.message : String(error)}）`,
       )
       return null
     }
@@ -95,7 +95,7 @@ export function apply(ctx, config = {}) {
 
   ctx.effect(() => {
     void store.warm().catch((error) => {
-      ctx.logger?.warn?.(`look-then-build: warm failed: ${error instanceof Error ? error.message : String(error)}`)
+      ctx.logger?.warn?.(`research-then-build: warm failed: ${error instanceof Error ? error.message : String(error)}`)
     })
     return () => {
       for (const agentId of [...scoped.keys()]) closeScoped(agentId)
@@ -128,58 +128,58 @@ export function apply(ctx, config = {}) {
           content: [
             {
               type: 'text',
-              text: `你还在先看后建模式里，但这一轮结束了却没有交付。继续推进（缺台账就调研、缺检查就 look_challenge、或者直接把缺陷修掉），完成后调用 look_finish 交付。不要跳过门禁直接给结论。（第 ${state.nudges}/${MAX_NUDGES} 次提醒）`,
+              text: `你还在先调研后建模式里，但这一轮结束了却没有交付。继续推进（缺台账就调研、缺检查就 research_challenge、或者直接把缺陷修掉），完成后调用 research_finish 交付。不要跳过门禁直接给结论。（第 ${state.nudges}/${MAX_NUDGES} 次提醒）`,
             },
           ],
           source: SOURCE,
         }),
       )
     } catch (error) {
-      ctx.logger?.warn?.(`look-then-build: turn-stopping nudge failed: ${error instanceof Error ? error.message : String(error)}`)
+      ctx.logger?.warn?.(`research-then-build: turn-stopping nudge failed: ${error instanceof Error ? error.message : String(error)}`)
     }
   })
 
   ctx.commands.register({
-    name: 'look-status',
-    description: '查看当前先看后建模式状态',
+    name: 'research-status',
+    description: '查看当前先调研后建模式状态',
     async handler({ agent }) {
       const live = await store.get(agent.id)
       if (isActive(live)) return { kind: 'success', text: renderStatus(live) }
       const record = await journal.read(agent.id).catch(() => null)
       if (record && record.version === 2) return { kind: 'success', text: renderStatus(record) }
-      if (record) return { kind: 'success', text: `发现一份旧格式（v1）的循环记录：${record.task ?? ''}。它属于 \`/look\` 阻塞命令时代，不再更新。` }
-      return { kind: 'success', text: '当前不在先看后建模式。输入 /look <任务> 进入。' }
+      if (record) return { kind: 'success', text: `发现一份旧格式（v1）的循环记录：${record.task ?? ''}。它属于 \`/research\` 阻塞命令时代，不再更新。` }
+      return { kind: 'success', text: '当前不在先调研后建模式。输入 /research <任务> 进入。' }
     },
   })
 
   ctx.commands.register({
-    name: 'look-exit',
-    description: '退出先看后建模式（不交付）',
+    name: 'research-exit',
+    description: '退出先调研后建模式（不交付）',
     async handler({ agent }) {
       const state = await store.get(agent.id)
-      if (!isActive(state)) return { kind: 'success', text: '当前不在先看后建模式。' }
+      if (!isActive(state)) return { kind: 'success', text: '当前不在先调研后建模式。' }
       state.state = 'closed'
       state.finishedAt = new Date().toISOString()
       state.result = { summary: '（用户主动退出，未交付）', exited: true }
       await store.set(agent.id, state)
       store.drop(agent.id)
       closeScoped(agent.id)
-      return { kind: 'success', text: '已退出先看后建模式。' }
+      return { kind: 'success', text: '已退出先调研后建模式。' }
     },
   })
 
   ctx.commands.register({
-    name: 'look',
-    description: '进入先看后建模式：先分析问题，需要时派子 Agent 调研，自己实现，再由独立 Agent 挑刺',
+    name: 'research',
+    description: '进入先调研后建模式：先分析问题，需要时派子 Agent 调研，自己实现，再由独立 Agent 挑刺',
     input: { hint: '输入任务，例如：给这个项目加上用户登录' },
     async handler(invocation) {
       const { agent, rawInput } = invocation
       const task = String(rawInput ?? '').trim()
-      if (!task) return { kind: 'error', text: '请给出任务描述，例如：/look 给这个项目加上用户登录' }
+      if (!task) return { kind: 'error', text: '请给出任务描述，例如：/research 给这个项目加上用户登录' }
 
       const existing = await store.get(agent.id)
       if (isActive(existing)) {
-        return { kind: 'error', text: '已经在这个任务的先看后建模式里了。用 /look-status 看进度，/look-exit 退出后再说新任务。' }
+        return { kind: 'error', text: '已经在这个任务的先调研后建模式里了。用 /research-status 看进度，/research-exit 退出后再说新任务。' }
       }
       const blocker = preflight(ctx, agent)
       if (blocker) return { kind: 'error', text: blocker }
@@ -196,7 +196,7 @@ export function apply(ctx, config = {}) {
       try {
         agent.followup(
           createUserMessage({
-            content: [{ type: 'text', text: lookBrief({ task, maxRounds }) }],
+            content: [{ type: 'text', text: modeBrief({ task, maxRounds }) }],
             source: SOURCE,
           }),
         )
@@ -207,7 +207,7 @@ export function apply(ctx, config = {}) {
 
       return {
         kind: 'success',
-        text: `已进入先看后建模式（最多 ${maxRounds} 轮独立检查）。接下来我会先把问题分析清楚，需要外部事实时再派子 Agent。`,
+        text: `已进入先调研后建模式（最多 ${maxRounds} 轮独立检查）。接下来我会先把问题分析清楚，需要外部事实时再派子 Agent。`,
       }
     },
   })

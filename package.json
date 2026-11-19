@@ -1,8 +1,8 @@
 {
-  "name": "dsh-look-then-build",
-  "version": "0.4.0",
+  "name": "dsh-research-then-build",
+  "version": "0.5.0",
   "type": "module",
-  "description": "Look before you build: /look makes the agent survey existing solutions before writing code, implement in the open, and pass an independent review — delivery is blocked on reinvented wheels and unverified work.",
+  "description": "Research before you build: /research makes the agent survey existing solutions before writing code, implement in the open, and pass an independent review — delivery is blocked on reinvented wheels and unverified work.",
   "keywords": [
     "deepseek",
     "deepseek-harness",
@@ -16,7 +16,7 @@
     "build-vs-buy",
     "open-source-first",
     "research-first",
-    "look-before-you-leap",
+    "prior-art",
     "agent-workflow",
     "prompt-engineering"
   ],
@@ -30,11 +30,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Astonmy/dsh-look-then-build.git"
+    "url": "git+https://github.com/Astonmy/dsh-research-then-build.git"
   },
-  "homepage": "https://github.com/Astonmy/dsh-look-then-build#readme",
+  "homepage": "https://github.com/Astonmy/dsh-research-then-build#readme",
   "bugs": {
-    "url": "https://github.com/Astonmy/dsh-look-then-build/issues"
+    "url": "https://github.com/Astonmy/dsh-research-then-build/issues"
   },
   "engines": {
     "node": ">=22.19.0",

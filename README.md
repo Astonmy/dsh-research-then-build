@@ -1,8 +1,8 @@
-# dsh-look-then-build — 先看，再建
+# dsh-research-then-build — 先调研，再建
 
-给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 加一道流程：**输入 `/look` 进入「先看后建」模式**，AI 不许上来就写，得先把问题分析清楚；要造轮子之前先查现成方案；写完之后由一个独立上下文的 Agent 挑刺，过不了不许交付。
+给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 加一道流程：**输入 `/research` 进入「先调研后建」模式**，AI 不许上来就写，得先把问题分析清楚；要造轮子之前先查现成方案；写完之后由一个独立上下文的 Agent 挑刺，过不了不许交付。
 
-一句话：**治 AI 乱写代码、重复造轮子、不做调研、不看开源项目的毛病。** 名字就是规矩：先看，再建。
+一句话：**治 AI 乱写代码、重复造轮子、不做调研、不看开源项目的毛病。** 名字就是规矩：先调研，再建。
 
 ## 它治的四个病
 
@@ -10,7 +10,7 @@
 
 **AI 的典型表现**：你说"给这个项目加个登录"，它直接手写 session 表、base64 拼 token、自己写校验，全程没提过 Auth.js、Lucia、Clerk 这些现成方案——不是不会用，是压根没去查。
 
-**这个插件怎么拦**：进入模式后，第一步是把问题拆开、把判断和不确定的地方写给用户看，然后才动手。一旦它打算引入依赖、或者打算自己写一个本该存在的轮子，就必须先调 `look_survey` 产出**调研台账**：候选方案、官方地址、许可证、维护状态、适配判断。
+**这个插件怎么拦**：进入模式后，第一步是把问题拆开、把判断和不确定的地方写给用户看，然后才动手。一旦它打算引入依赖、或者打算自己写一个本该存在的轮子，就必须先调 `research_survey` 产出**调研台账**：候选方案、官方地址、许可证、维护状态、适配判断。
 
 ### 2. 重复造轮子（自研）
 
@@ -22,32 +22,32 @@
 
 **AI 的典型表现**：不问"别人怎么解决的"，直接从零写，写完还不知道行业里早有标准做法。
 
-**这个插件怎么拦**：`look_survey` 强制检索 npm 包、官方 SDK、托管服务、可复用的开源项目与模板仓库，并**禁止凭记忆填 URL 或版本号**——每个链接必须来自本轮真实检索结果，不确定的写"未验证"。检查 Agent 还会专门核一遍"**假证据**"：台账里的包名、版本、许可证是不是编的。
+**这个插件怎么拦**：`research_survey` 强制检索 npm 包、官方 SDK、托管服务、可复用的开源项目与模板仓库，并**禁止凭记忆填 URL 或版本号**——每个链接必须来自本轮真实检索结果，不确定的写"未验证"。检查 Agent 还会专门核一遍"**假证据**"：台账里的包名、版本、许可证是不是编的。
 
 ### 4. 自己说没问题
 
 **AI 的典型表现**：写完自己看一遍，"检查过了，没问题"。同一个上下文里自评等于自证——它知道自己当初为什么这么写。
 
-**这个插件怎么拦**：`look_challenge` 派一个**全新上下文**的 Agent，拿不到实现者的推理过程，自己跑 `git status` / `git diff`、读代码，按五个维度挑刺：绕开台账 / 假证据 / 功能遗漏 / 未验证 / 过度设计。然后追问两个**分开问**的问题：还有哪些地方没被覆盖、哪些判断你有把握。
+**这个插件怎么拦**：`research_challenge` 派一个**全新上下文**的 Agent，拿不到实现者的推理过程，自己跑 `git status` / `git diff`、读代码，按五个维度挑刺：绕开台账 / 假证据 / 功能遗漏 / 未验证 / 过度设计。然后追问两个**分开问**的问题：还有哪些地方没被覆盖、哪些判断你有把握。
 
 ### 补一刀：改完就想跑
 
-检查之后又偷偷改了几行，检查结论已经过期。`look_finish` 会比对工作目录指纹，**检查后改过代码就拒绝交付**；没交付就想收尾，回合会被提醒继续。
+检查之后又偷偷改了几行，检查结论已经过期。`research_finish` 会比对工作目录指纹，**检查后改过代码就拒绝交付**；没交付就想收尾，回合会被提醒继续。
 
-## 一次 `/look` 长什么样
+## 一次 `/research` 长什么样
 
 ```
-/look 给这个项目加上用户登录
+/research 给这个项目加上用户登录
    ↓
 主 Agent 先分析：拆能力点、说判断、说哪里不确定（流式可见）
    ↓
-需要外部事实 → look_survey   → 调研台账（候选/许可/维护/结论/证据）
+需要外部事实 → research_survey   → 调研台账（候选/许可/维护/结论/证据）
    ↓
 主 Agent 自己实现（不甩给子 Agent）
    ↓
-look_challenge → 独立 Agent 挑刺 + 遗漏追问 + 把握盘点
+research_challenge → 独立 Agent 挑刺 + 遗漏追问 + 把握盘点
    ↓
-有严重问题就修 → 再审；收敛或到上限 → look_finish 交付
+有严重问题就修 → 再审；收敛或到上限 → research_finish 交付
 ```
 
 子 Agent 是按需调用的，不是开场就跑；每一步在对话里都留一张工具卡片，进度看得见。
@@ -63,28 +63,28 @@ look_challenge → 独立 Agent 挑刺 + 遗漏追问 + 把握盘点
 ### 从 npm 装（推荐）
 
 ```bash
-dsh plugin --profile <你的 profile> add dsh-look-then-build@latest --registry=https://registry.npmjs.org/
+dsh plugin --profile <你的 profile> add dsh-research-then-build@latest --registry=https://registry.npmjs.org/
 ```
 
-或者在 DSH 的 **Plugins** 面板里按包名添加 `dsh-look-then-build`。
+或者在 DSH 的 **Plugins** 面板里按包名添加 `dsh-research-then-build`。
 
 ### 从源码装
 
 ```bash
-git clone https://github.com/Astonmy/dsh-look-then-build
+git clone https://github.com/Astonmy/dsh-research-then-build
 ```
 
 然后在 **Plugins → Add plugin** 里选克隆下来的目录；或用 `plugin_manager` 的 `install_bundle` 指向该目录。
 
-装完在新会话里输入 `/look 你的任务` 验证。
+装完在新会话里输入 `/research 你的任务` 验证。
 
 ## 用法
 
 | 输入 | 作用 |
 |---|---|
-| `/look <任务>` | 进入「先看后建」模式 |
-| `/look-status` | 看当前到哪一步、台账有没有、检查了几轮 |
-| `/look-exit` | 退出，不交付 |
+| `/research <任务>` | 进入「先调研后建」模式 |
+| `/research-status` | 看当前到哪一步、台账有没有、检查了几轮 |
+| `/research-exit` | 退出，不交付 |
 
 ## 三道门
 
@@ -102,7 +102,7 @@ git clone https://github.com/Astonmy/dsh-look-then-build
 
 ## What it solves (English)
 
-Look before you build. A look-before-build mode for DeepSeek Harness: type `/look` and the agent must analyse first, survey existing solutions before building anything itself, implement in the open, then have a fresh-context agent attack the result. Delivery is blocked without a survey ledger, without an independent review, or while severe findings remain.
+Research before you build. A research-before-build mode for DeepSeek Harness: type `/research` and the agent must analyse first, survey existing solutions before building anything itself, implement in the open, then have a fresh-context agent attack the result. Delivery is blocked without a survey ledger, without an independent review, or while severe findings remain.
 
 It targets four common LLM coding failures: writing before researching, **reinventing the wheel instead of using existing open-source libraries**, never looking at prior art, and self-certifying its own work.
 

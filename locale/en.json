@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Look then build",
-    "description": "Type /look to enter look-then-build mode: analyse first, survey existing solutions before writing, implement in the open, then face an independent reviewer. Delivery is blocked without a survey ledger, without an independent review, or while severe findings remain.",
+    "title": "Research then build",
+    "description": "Type /research to enter research-then-build mode: analyse first, survey existing solutions before writing, implement in the open, then face an independent reviewer. Delivery is blocked without a survey ledger, without an independent review, or while severe findings remain.",
     "detail": "docs/DETAIL.md"
   }
 }
