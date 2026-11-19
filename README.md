@@ -60,23 +60,21 @@ research_challenge → 独立 Agent 挑刺 + 遗漏追问 + 把握盘点
 
 ## 安装
 
-### 从 npm 装（推荐）
+一条命令（DSH 插件中心 / npm）：
 
 ```bash
-dsh plugin --profile <你的 profile> add dsh-research-then-build@latest --registry=https://registry.npmjs.org/
+dsh plugin --profile web add dsh-research-then-build
 ```
 
-或者在 DSH 的 **Plugins** 面板里按包名添加 `dsh-research-then-build`。如果 npm 上还搜不到，用下面的源码方式装。
-
-### 从源码装
+从源码安装（npm 上暂不可用时）：
 
 ```bash
-git clone https://github.com/Astonmy/dsh-research-then-build
+dsh plugin --profile web add github:Astonmy/dsh-research-then-build
 ```
-
-然后在 **Plugins → Add plugin** 里选克隆下来的目录；或用 `plugin_manager` 的 `install_bundle` 指向该目录。
 
 装完在新会话里输入 `/research 你的任务` 验证。
+
+> 本插件是社区作品，与 DeepSeek 官方无关，不是官方项目。
 
 ## 用法
 
